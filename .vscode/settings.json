@@ -1,0 +1,11 @@
+{
+  "cSpell.words": [
+    "blogid",
+    "firestore",
+    "signup",
+    "unsub"
+  ],
+  "[typescriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}
