@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { addDoc, doc, collection } from 'firebase/firestore';
 import { db } from '../firebase/clientApp';
 import Router from 'next/router';
+import Animatable from './UIComponents/Animatable';
 
 const PostBlog = ({ authState: { user } }) => {
 	const [error, setError] = useState('');
@@ -39,28 +40,30 @@ const PostBlog = ({ authState: { user } }) => {
 	// ===================================================================================================================
 	return (
 		<div className='PostBlog'>
-			<form onSubmit={handlePost}>
-				<p>Title</p>
-				<input ref={titleRef} type='text' required />
+			<Animatable display='block' initial={{ y: 100 }} animate={{ y: 0 }} exit={{ y: 100 }}>
+				<form onSubmit={handlePost}>
+					<p>Title</p>
+					<input ref={titleRef} type='text' required />
 
-				<p>Subtitle</p>
-				<input ref={subtitleRef} type='text' required />
+					<p>Subtitle</p>
+					<input ref={subtitleRef} type='text' required />
 
-				<p>Content</p>
-				<textarea ref={contentRef} required />
+					<p>Content</p>
+					<textarea ref={contentRef} required />
 
-				<p>Image</p>
-				<input ref={imageRef} type='text' />
+					<p>Image</p>
+					<input ref={imageRef} type='text' />
 
-				<p>Color</p>
-				<input ref={colorRef} defaultValue='#ff912a' type='color' />
+					<p>Color</p>
+					<input ref={colorRef} defaultValue='#ff912a' type='color' />
 
-				<div className='aCenter'>
-					<button>POST</button>
+					<div className='aCenter'>
+						<button>POST</button>
 
-					{error && <h5>{error}</h5>}
-				</div>
-			</form>
+						{error && <h5>{error}</h5>}
+					</div>
+				</form>
+			</Animatable>
 		</div>
 	);
 };

@@ -4,6 +4,7 @@ import SignUpForm from './LoginComponents/SignUpForm';
 import classnames from 'classnames';
 import Link from 'next/link';
 import Router from 'next/router';
+import Animatable from './UIComponents/Animatable';
 
 interface LoginProps {
 	view?: 'login' | 'signup';
@@ -11,7 +12,6 @@ interface LoginProps {
 
 const Login: FC<LoginProps> = ({ view = 'login' }) => {
 	const [v, setV] = useState(view);
-
 
 	// ===================================================================================================================
 	//  UI
@@ -27,7 +27,23 @@ const Login: FC<LoginProps> = ({ view = 'login' }) => {
 				</Link>
 			</div>
 
-			<div className='content'>{v === 'login' ? <LoginForm onLogin={()=>{Router.push("/")}}/> : <SignUpForm onLogin={()=>{Router.push("/")}}/>}</div>
+			<div className='content'>
+				<Animatable variants={{ hidden: { opacity: 0, x: '-10vw' }, visible: { opacity: 1, x: 0 } }} initial='hidden' animate='visible'>
+					{v === 'login' ? (
+						<LoginForm
+							onLogin={() => {
+								Router.push('/');
+							}}
+						/>
+					) : (
+						<SignUpForm
+							onLogin={() => {
+								Router.push('/');
+							}}
+						/>
+					)}
+				</Animatable>
+			</div>
 
 			{/* STYLE */}
 			<style jsx>{`

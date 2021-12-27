@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useGetCollection } from '../hooks/useGetCollection';
-import { useRouter } from 'next/router';
 import { getDoc } from 'firebase/firestore';
 import Loader from './UIComponents/Loader';
+import { motion } from 'framer-motion';
 
-const ViewBlog = ({ authState: { user } }) => {
-	const { query } = useRouter();
+const ViewBlog = ({ blogID }) => {
 	const [author, setAuthor] = useState('');
-	const [blog, loading, bError] = useGetCollection('blogs', query.blogid);
+	const [blog] = useGetCollection('blogs', blogID);
 
 	useEffect(() => {
 		// Get author name
@@ -19,28 +18,29 @@ const ViewBlog = ({ authState: { user } }) => {
 		if (blog && blog.author) getAuthor();
 	}, [blog]);
 
-	const { color, title, subTitle = 'No subtitle', image, content, date } = blog || {};
-
 	// ===================================================================================================================
 	//  UI
 	// ===================================================================================================================
-	if (loading) return <Loader height='70vh' />;
+	if (!blog) return <Loader height='70vh' />;
+	const { color, title, subTitle = 'No subtitle', image, content, date } = blog;
 	return (
 		<div className='ViewBlog'>
 			<div className='ribbon'></div>
 
-			<div className='content'>
-				<h1>{title}</h1>
-				<div className='sub lightText'>
-					<span>{subTitle}</span>
-					<span>Posted {new Date(date ? date.toDate() : new Date()).toLocaleString()}</span>
+			<motion.div variants={contentVariant} initial='init' animate='final'>
+				<div className='content'>
+					<h1>{blog.title}</h1>
+					<div className='sub lightText'>
+						<span>{subTitle}</span>
+						<span>Posted {new Date(date ? date.toDate() : new Date()).toLocaleString()}</span>
+					</div>
+					<div className='image'>
+						<img src={image || '/images/default.png'} alt='Article Image' />
+					</div>
+					<p>{content}</p>
+					author: {author ? author : 'Unknown'}
 				</div>
-				<div className='image'>
-					<img src={image || '/images/default.png'} alt='Article Image' />
-				</div>
-				<p>{content}</p>
-				author: {author ? author : 'Unknown'}
-			</div>
+			</motion.div>
 
 			{/* STYLE */}
 			<style jsx>{`
@@ -61,7 +61,6 @@ const ViewBlog = ({ authState: { user } }) => {
 					gap: 10px;
 					justify-content: space-between;
 				}
-
 
 				.content {
 					background: #fff;
@@ -97,6 +96,12 @@ const ViewBlog = ({ authState: { user } }) => {
 			`}</style>
 		</div>
 	);
+};
+
+// VARIANTS
+const contentVariant = {
+	init: { y: 100 },
+	final: { y: 0, transition: { duration: 0.25, type: 'tween', ease: 'easeOut' } }
 };
 
 export default ViewBlog;

@@ -1,7 +1,7 @@
 import React from 'react';
 import Login from '../Components/Login';
 
-const login = () => {
+const login = ({route}) => {
   return (
     <div>
       <Login/>

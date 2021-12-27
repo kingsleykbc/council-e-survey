@@ -8,7 +8,9 @@ import Loader from './UIComponents/Loader';
 const Home = ({ authState: { user } }) => {
 	const [blogs, loading, error] = useGetCollection('blogs');
 
-	const blogsWidgets = blogs?.map((item, index) => <Blog key={item.id} isFeatured={index === 0} {...item} date={item.date?.toDate()} />);
+	const blogsWidgets = blogs?.map((item, index) => (
+		<Blog key={item.id} animationDelay={index / (blogs.length * 5)} isFeatured={index === 0} {...item} date={item.date?.toDate()} />
+	));
 
 	// ===================================================================================================================
 	//  UI

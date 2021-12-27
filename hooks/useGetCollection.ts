@@ -25,7 +25,8 @@ export const useGetCollection = (collectionName, id = null, queryParams = {}) =>
 		} catch (e) {
 			setError(e.message);
 		}
-	}, []);
+	},[]);
+
 
 	return [data, loading, error];
 };

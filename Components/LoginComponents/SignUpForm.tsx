@@ -20,14 +20,11 @@ const SignUpForm = ({ onLogin }) => {
 		try {
 			// Create user auth
 			const user = await createUserWithEmailAndPassword(auth, email, password);
-			console.log({user});
+			console.log({ user });
 
 			// Create user
 			const docRef = doc(db, 'users', user.user.uid);
 			const userData = await setDoc(docRef, { name });
-			console.log("\n.\n.\n.\n");
-			console.log(userData);
-			console.log("\n.\n.\n.");
 			onLogin();
 		} catch (e) {
 			console.log(e);
