@@ -74,7 +74,7 @@ const Header = ({ authState: { isAuthenticated, user, loading, error } }) => {
 					box-shadow: 0 2px 5px rgba(0, 0, 0, 0.137);
 					padding: 10px;
 					overflow: hidden;
-					background: #fff;
+					background: var(--backgroundColor);
 				}
 
 				.logo {

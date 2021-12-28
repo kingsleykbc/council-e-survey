@@ -13,6 +13,7 @@ const Animatable = ({
 	display = null,
 	presenceInitial = true,
 	exitBeforeEnter = true,
+	style = {},
 	children
 }) => {
 	const comp = (
@@ -24,6 +25,7 @@ const Animatable = ({
 			transition={transition}
 			exit={exit}
 			className='AnimatableComponentGlobal'
+			style={style}
 		>
 			{children}
 			{/* STYLE */}

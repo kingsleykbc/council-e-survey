@@ -1,7 +1,7 @@
 import React from 'react';
 import Login from '../Components/Login';
 
-const signup = ({ route }) => {
+const signup = () => {
 	return (
 		<div>
 			<Login view='signup' />
