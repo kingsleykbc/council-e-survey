@@ -1,4 +1,18 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+`
+## SHANGRI-LA COUNCIL E-SURVEY
+
+This is an online e-survey platform, where users send anonymous responses to surveys posted by the city council. It is a react PWA built with React and Next.js and firebase 
+
+This tools used for this application are:
+ - Next.js: Framework
+ - Firebase: Backend, database, and hosting
+ - TypeScript and tsx: Language
+ - Framer motion: Animation
+ - CSS: UI/Styling
+
+The styles are entirely built from scratch in CSS alone, and framer motion is only used to animate some of the elements.
+
+
 
 ## Getting Started
 
