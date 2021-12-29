@@ -36,11 +36,12 @@ button {
 	font-size: 1rem;
 	color: #fff;
 	cursor: pointer;
+	transition: transform ease-out 0.25s;
 }
 
 .button:hover,
 button:hover {
-	opacity: 0.7;
+	transform: scale(1.07);
 }
 
 input,
@@ -48,10 +49,30 @@ select,
 textarea {
 	background: none;
 	border: 2px solid var(--borderColor);
+	color: var(--color);
 	font-size: 1rem;
 	padding: 10px 12px;
 	border-radius: 5px;
 	width: 100%;
+}
+
+input[type='color'] {
+	height: 60px;
+	width: auto;
+	min-width: 80px;
+}
+
+input:autofill {
+	background-color: var(--backgroundColor) !important;
+	font-size: 1rem;
+	font-weight: bold;
+}
+
+input[type='checkbox'],
+input[type='radio'] {
+	display: inline-block;
+	width: auto;
+	vertical-align: middle;
 }
 
 textarea {
@@ -60,7 +81,8 @@ textarea {
 }
 
 form p {
-	margin: 10px 0;
+	margin: 20px 0 10px 0;
+	color: var(--lightTextColor);
 	font-weight: bold;
 }
 
@@ -77,20 +99,36 @@ form p {
 }
 
 .aCenter {
-  text-align: center;
+	text-align: center;
 }
 
-input[type="color"]{
-	height: 60px;
-	width: auto;
-	min-width: 80px;
+.hasShadow {
+	box-shadow: var(--boxShadow);
 }
+
+.skeleton {
+	background: var(--faintColor);
+	border-radius: 6px;
+	animation: flash 2s steps(5, start) infinite;
+}
+@keyframes flash {
+	from {
+		opacity: 0.5;
+	}
+	50% {
+		opacity: 1;
+	}
+	to {
+		opacity: 0.5;
+	}
+}
+
 h5 {
 	display: block;
 	margin: 10px;
 	background: #ffbac9;
-	color: #e4375c;
+	color: #cf2a4e;
 	border-radius: 5px;
-	font-size: 0.95rem;
-	padding: 10px;
+	font-size: 1rem;
+	padding: 10px 20px;
 }

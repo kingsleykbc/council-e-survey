@@ -14,6 +14,7 @@ const Animatable = ({
 	presenceInitial = true,
 	exitBeforeEnter = true,
 	style = {},
+	custom = null,
 	children
 }) => {
 	const comp = (
@@ -26,6 +27,7 @@ const Animatable = ({
 			exit={exit}
 			className='AnimatableComponentGlobal'
 			style={style}
+			custom={custom}
 		>
 			{children}
 			{/* STYLE */}
@@ -38,7 +40,12 @@ const Animatable = ({
 		</motion.div>
 	);
 
-	if (exit) return <AnimatePresence initial={presenceInitial} exitBeforeEnter={exitBeforeEnter}>{show && comp}</AnimatePresence>;
+	if (exit)
+		return (
+			<AnimatePresence initial={presenceInitial} exitBeforeEnter={exitBeforeEnter}>
+				{show && comp}
+			</AnimatePresence>
+		);
 	return comp;
 };
 

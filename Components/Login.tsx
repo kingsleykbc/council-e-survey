@@ -6,10 +6,15 @@ import Link from 'next/link';
 import Router from 'next/router';
 import Animatable from './UIComponents/Animatable';
 import Logo from './UIComponents/Logo';
+import AdminLoginForm from './LoginComponents/AdminLoginForm';
 
 interface LoginProps {
 	view?: 'login' | 'signup' | 'admin-login';
 }
+
+const onLogin = () => {
+	Router.push('/');
+};
 
 const Login: FC<LoginProps> = ({ view = 'login' }) => {
 	const [v, setV] = useState(view);
@@ -51,17 +56,11 @@ const Login: FC<LoginProps> = ({ view = 'login' }) => {
 							animate='visible'
 						>
 							{v === 'login' ? (
-								<LoginForm
-									onLogin={() => {
-										Router.push('/');
-									}}
-								/>
+								<LoginForm onLogin={onLogin} />
+							) : v === 'signup' ? (
+								<SignUpForm onLogin={onLogin} />
 							) : (
-								<SignUpForm
-									onLogin={() => {
-										Router.push('/');
-									}}
-								/>
+								<AdminLoginForm onLogin={onLogin} />
 							)}
 						</Animatable>
 					</div>
@@ -76,7 +75,8 @@ const Login: FC<LoginProps> = ({ view = 'login' }) => {
 					left: 0;
 					width: 100%;
 					min-height: 100%;
-					padding-bottom: 30px;
+					padding: 20px;
+					padding-bottom: 50px;
 					display: flex;
 					align-items: center;
 					justify-content: center;
@@ -109,8 +109,9 @@ const Login: FC<LoginProps> = ({ view = 'login' }) => {
 					color: #fff;
 				}
 
-				.content {
-					padding: 20px 0;
+				.Login :global(button) {
+					display: block;
+					margin: 20px auto;
 				}
 
 				@media screen and (min-width: 800px) {

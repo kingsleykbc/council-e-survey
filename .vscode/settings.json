@@ -1,11 +1,6 @@
 {
-  "cSpell.words": [
-    "blogid",
-    "firestore",
-    "signup",
-    "unsub"
-  ],
-  "[typescriptreact]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+	"cSpell.words": ["blogid", "firestore", "prefill", "signup", "unsub"],
+	"[typescriptreact]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	}
 }

@@ -5,14 +5,14 @@ const themes = {
     backgroundColor: "#fff",
     lightText: "#949494",
     borderColor: "#ddd",
-    faintColor: "#f5f5f5"
+    faintColor: "#f0f0f0"
   },
   dark: {
     primaryColor: "#26c6da",
     textColor: "#fff",
     backgroundColor: "#2e2e2e",
-    lightText: "#616161",
-    borderColor: "#000",
+    lightText: "#7a7a7a",
+    borderColor: "#171717",
     faintColor: "#1f1f1f"
   }
 }

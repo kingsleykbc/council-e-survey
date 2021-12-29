@@ -3,9 +3,10 @@ import { auth } from '../../firebase/clientApp';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import Button from '../UIComponents/Button';
 import ErrorMessage from '../UIComponents/ErrorMessage';
+import { doc, getDoc } from 'firebase/firestore';
 import TestCredentials from './TestCredentials';
 
-const LoginForm = ({ onLogin }) => {
+const AdminLoginForm = ({ onLogin }) => {
 	const [error, setError] = useState('');
 	const [loading, setLoading] = useState(false);
 	const emailRef = useRef(null);
@@ -23,8 +24,11 @@ const LoginForm = ({ onLogin }) => {
 		const password = passwordRef.current.value;
 
 		try {
-			await signInWithEmailAndPassword(auth, email, password);
-			onLogin();
+			const data: any = await signInWithEmailAndPassword(auth, email, password);
+			const idToken = await data.user.getIdTokenResult();
+			if (idToken.claims.isAdmin) {
+				onLogin();
+			} else setError('This is not an admin account');
 		} catch (e) {
 			setError(e.message);
 		}
@@ -34,10 +38,10 @@ const LoginForm = ({ onLogin }) => {
 	/**
 	 * PREFILL WITH TEST CREDENTIALS (TEST ONLY)
 	 */
-	const prefill = ({email, password}) => {
+	const prefill = ({ email, password }) => {
 		emailRef.current.value = email;
 		passwordRef.current.value = password;
-	}
+	};
 
 	// ===================================================================================================================
 	//  UI
@@ -45,8 +49,8 @@ const LoginForm = ({ onLogin }) => {
 	return (
 		<div>
 			<form onSubmit={handleLogin}>
-				<p>Email</p>
-				<input ref={emailRef} type='email' required placeholder='kingsley@example.com' />
+				<p>Admin Email</p>
+				<input ref={emailRef} type='email' required />
 
 				<p>Password</p>
 				<input ref={passwordRef} type='password' required />
@@ -56,10 +60,10 @@ const LoginForm = ({ onLogin }) => {
 					Login
 				</Button>
 				<ErrorMessage center error={error} />
-				<TestCredentials onSelect={prefill} />
+				<TestCredentials isAdmin onSelect={prefill} />
 			</form>
 		</div>
 	);
 };
 
-export default LoginForm;
+export default AdminLoginForm;

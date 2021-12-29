@@ -1,20 +1,20 @@
 import React from 'react';
 
-const Section = ({children}) => {
-  return (
-    <div>
-      {children}
+const Section = ({ children, maxWidth = '900px' }) => {
+	return (
+		<div>
+			{children}
 
-      {/* STYLE */}
-      <style jsx>{`
-        div {
-          max-width: 900px;
-          padding: 20px;
-          margin: auto;
-        }
-      `}</style>
-    </div>
-  );
+			{/* STYLE */}
+			<style jsx>{`
+				div {
+					max-width: ${maxWidth};
+					padding: 20px;
+					margin: auto;
+				}
+			`}</style>
+		</div>
+	);
 };
 
 export default Section;

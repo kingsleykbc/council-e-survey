@@ -1,56 +1,55 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from './LayoutComponents/Header';
-import { auth } from '../firebase/clientApp';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { IoMdMoon } from 'react-icons/io';
-import { RiSunFill as IconSun } from 'react-icons/ri';
+
 import Loader from './UIComponents/Loader';
 import Router from 'next/router';
+import { db, auth } from '../firebase/clientApp';
+import { doc, getDoc } from 'firebase/firestore';
 
-const Layout = ({ children, setTheme, theme }) => {
+const Layout = ({ children, setTheme, theme, route }) => {
 	const [user, loading, error] = useAuthState(auth);
-	const authState = { user, loading, error, isAuthenticated: user != null, isAdmin: false };
+	const [isAdmin, setIsAdmin] = useState(false);
+	const [userData, setUserData] = useState({});
+	const [dataFetched, setDataFetched] = useState(false);
 
+	/**
+	 * ON COMPONENT, MOUNT CHECK THE AUTHENTICATION
+	 */
 	useEffect(() => {
+		setDataFetched(false);
+		// If user not authenticated, redirect to Login
 		if (!user && !loading) Router.push('/login');
+		else if (user) {
+			// If user authenticated, get User or Admin details
+			const getAdmin = async () => {
+				// Get Admin data
+				const idToken = await user.getIdTokenResult();
+				if (idToken.claims.isAdmin) {
+					setIsAdmin(true);
+					setUserData({ fullName: 'Admin', email: user.email });
+				} else {
+					// If not admin (user), return user data
+					const docRef = doc(db, 'users', user.uid);
+					const u = await getDoc(docRef);
+					setUserData(u.data());
+				}
+				setDataFetched(true);
+			};
+			getAdmin();
+		}
 	}, [user, loading]);
+
+	const authState = { user, loading, error, isAuthenticated: user != null, isAdmin, userData };
 
 	// ===================================================================================================================
 	//  UI
 	// ===================================================================================================================
-	if (!user) return <Loader height='60vh' />;
+	if (!user || !dataFetched) return <Loader height='70vh' />;
 	return (
 		<div>
-			<Header authState={authState} />
+			<Header route={route} authState={authState} theme={theme} setTheme={setTheme} />
 			<main>{typeof children === 'function' ? children({ authState }) : children}</main>
-
-			<div className='fab' onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
-				{theme === 'light' ? <IoMdMoon style={{ opacity: 0.6 }} /> : <IconSun />}
-			</div>
-
-			{/* STYLE */}
-			<style jsx>{`
-				.fab {
-					position: fixed;
-					width: 60px;
-					height: 60px;
-					bottom: 30px;
-					right: 30px;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					font-size: 2rem;
-					cursor: pointer;
-					border-radius: 5px;
-					background: var(--backgroundColor);
-					box-shadow: var(--boxShadow);
-					transition: opacity 0.2s linear;
-				}
-
-				.fab:hover {
-					opacity: 0.5;
-				}
-			`}</style>
 		</div>
 	);
 };

@@ -1,15 +1,15 @@
 import React from 'react';
-import { FaGasPump } from 'react-icons/fa';
+import { RiGovernmentLine  as LogoIcon} from 'react-icons/ri';
 import Link from 'next/link';
 
 const Logo = ({ showText = true, iconSize = '2rem', margin = '0', isLink = false, showResponsiveText = true }) => {
 	const item = (
 		<div className='Logo'>
 			<div className='logoIcon'>
-				<FaGasPump style={{ fill: 'var(--primaryColor)' }} />
+				<LogoIcon style={{ fill: 'var(--primaryColor)' }} />
 			</div>
 
-			{showText && <h2>Shangri-La E-survey</h2>}
+			{showText && <h2>Council E-survey</h2>}
 
 			{/* STYLE */}
 			<style jsx>{`
@@ -20,13 +20,19 @@ const Logo = ({ showText = true, iconSize = '2rem', margin = '0', isLink = false
 				}
 
 				h2 {
-					font-size: 1.1rem;
+					font-size: 1rem;
+					margin-left: 15px;
 				}
 
 				.logoIcon {
 					font-size: ${iconSize};
-					margin-right: ${showText ? '15px' : ''};
 					margin-bottom: -7px;
+				}
+
+				@media screen and (max-width: 700px){
+					h2 {
+						display: ${showResponsiveText ? "block" : "none"};
+					}
 				}
 			`}</style>
 		</div>
