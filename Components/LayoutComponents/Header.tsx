@@ -1,15 +1,14 @@
 import React from 'react';
-import Link from 'next/link';
 import { auth } from '../../firebase/clientApp';
 import { signOut } from 'firebase/auth';
 import { IoMdMoon } from 'react-icons/io';
 import { RiSunFill as IconSun } from 'react-icons/ri';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import Img from 'next/image';
 import Logo from '../UIComponents/Logo';
 import { BsPersonCircle as IconPerson } from 'react-icons/bs';
 import Animatable from '../UIComponents/Animatable';
 import { useSearch } from '../../contexts/SearchContext';
+import { FiLogOut as IcLogout } from 'react-icons/fi';
+import Button from '../UIComponents/Button';
 
 const Header = ({ theme, route, setTheme, authState: { isAuthenticated, user, userData, loading, error } }) => {
 	const { keyword, setKeyword } = useSearch();
@@ -34,7 +33,12 @@ const Header = ({ theme, route, setTheme, authState: { isAuthenticated, user, us
 					{/* SEARCH BAR */}
 					{['/'].includes(route) && (
 						<div className='search'>
-							<input type='search' value={keyword} onChange={({ target: { value } }) => setKeyword(value)} placeholder='Search Questions (case-sensitive)' />
+							<input
+								type='search'
+								value={keyword}
+								onChange={({ target: { value } }) => setKeyword(value)}
+								placeholder='Search Questions (case-sensitive)'
+							/>
 						</div>
 					)}
 
@@ -48,9 +52,9 @@ const Header = ({ theme, route, setTheme, authState: { isAuthenticated, user, us
 							<div>{userData.fullName}</div>
 						</li>
 						<li>
-							<div onClick={handleLogout} className='button'>
+							<Button responsiveHideText icon={<IcLogout />} onClick={handleLogout} className='button'>
 								Logout
-							</div>
+							</Button>
 						</li>
 					</ul>
 				</nav>
@@ -69,6 +73,7 @@ const Header = ({ theme, route, setTheme, authState: { isAuthenticated, user, us
 					background: var(--backgroundColor);
 					position: sticky;
 					top: 0;
+					z-index: 10;
 				}
 
 				.logo {
@@ -108,6 +113,12 @@ const Header = ({ theme, route, setTheme, authState: { isAuthenticated, user, us
 					gap: 15px;
 				}
 
+				.account div {
+					max-width: 50px;
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
+
 				@media screen and (min-width: 800px) {
 					h1 {
 						display: block;
@@ -119,6 +130,10 @@ const Header = ({ theme, route, setTheme, authState: { isAuthenticated, user, us
 
 					.account {
 						margin-left: 15px;
+					}
+
+					.account div {
+						max-width: 100%;
 					}
 				}
 			`}</style>

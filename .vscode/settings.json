@@ -1,5 +1,5 @@
 {
-	"cSpell.words": ["blogid", "firestore", "prefill", "signup", "unsub"],
+	"cSpell.words": ["apidoc", "apidocs", "blogid", "Checkmarx", "firestore", "Lightbox", "nprogress", "prefill", "signup", "snis", "unsub"],
 	"[typescriptreact]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	}

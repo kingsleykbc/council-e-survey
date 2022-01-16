@@ -4,10 +4,12 @@ import { httpsCallable } from 'firebase/functions';
 import ErrorMessage from '../UIComponents/ErrorMessage';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import Button from '../UIComponents/Button';
+import QRScan from './SignUpFormComponents/QRScan';
 
 const SignUpForm = ({ onLogin }) => {
 	const [error, setError] = useState('');
 	const [loading, setLoading] = useState(false);
+	const [useQR, setUseQR] = useState(false);
 	const fullNameRef = useRef(null);
 	const emailRef = useRef(null);
 	const passwordRef = useRef(null);
@@ -22,6 +24,8 @@ const SignUpForm = ({ onLogin }) => {
 		e.preventDefault();
 		setError('');
 		setLoading(true);
+
+		// Setup data
 		const data = {
 			fullName: fullNameRef.current.value,
 			email: emailRef.current.value,
@@ -42,6 +46,14 @@ const SignUpForm = ({ onLogin }) => {
 			setError(e.message);
 		}
 		setLoading(false);
+	};
+
+	/**
+	 * HANDLE SNI QR SCAN
+	 */
+	const onScanSNI = sni => {
+		sniRef.current.value = sni;
+		setUseQR(false);
 	};
 
 	// ===================================================================================================================
@@ -65,8 +77,14 @@ const SignUpForm = ({ onLogin }) => {
 				<p>Home Address</p>
 				<textarea style={{ minHeight: '80px' }} ref={addressRef} required />
 
-				<p>SNI</p>
-				<input ref={sniRef} required />
+				<div className='sniInput'>
+					<p>SNI</p>
+					<div className='message'>
+						Enter SNI below or <span onClick={() => setUseQR(true)}>Scan QR</span>
+					</div>
+					<input ref={sniRef} required />
+					{useQR && <QRScan onScan={onScanSNI} />}
+				</div>
 
 				{/* HANDLE QR SCAN HERE */}
 				<Button isLoading={loading} className='marg aCenter'>
@@ -74,6 +92,28 @@ const SignUpForm = ({ onLogin }) => {
 				</Button>
 				<ErrorMessage center error={error} />
 			</form>
+
+			{/* STYLE */}
+			<style jsx>{`
+				.sniInput {
+					box-shadow: var(--boxShadow);
+					border-radius: 5px;
+					padding: 10px;
+					margin-top: 20px;
+				}
+				.sniInput p {
+					margin-top: 0;
+				}
+				.sniInput .message {
+					margin-bottom: 15px;
+				}
+				.sniInput span {
+					font-weight: bold;
+					text-decoration: underline;
+					color: var(--primaryColor);
+					cursor: pointer;
+				}
+			`}</style>
 		</div>
 	);
 };

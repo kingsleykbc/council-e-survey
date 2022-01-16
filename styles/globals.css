@@ -5,13 +5,14 @@ body {
 }
 
 body {
-	padding-bottom: 80px;
+	padding-bottom: 50px;
 }
 
 * {
 	margin: 0;
 	padding: 0;
 	text-decoration: none;
+	transition: background 0.2s linear;
 }
 
 a {
@@ -26,10 +27,14 @@ li {
 	box-sizing: border-box;
 }
 
+p {
+	line-height: 27px;
+}
+
 .button,
 button {
 	background: var(--primary);
-	border: 2px solid var(--primary);
+	border: none;
 	font-weight: bold;
 	padding: 10px 15px;
 	border-radius: 5px;
@@ -37,6 +42,7 @@ button {
 	color: #fff;
 	cursor: pointer;
 	transition: transform ease-out 0.25s;
+	box-shadow: var(--boxShadow);
 }
 
 .button:hover,
@@ -77,13 +83,20 @@ input[type='radio'] {
 
 textarea {
 	resize: vertical;
-	min-height: 150px;
+	min-height: 120px;
+	font-family: Arial, Helvetica, sans-serif;
 }
 
-form p {
+form p,
+.form p {
 	margin: 20px 0 10px 0;
 	color: var(--lightTextColor);
 	font-weight: bold;
+}
+
+label {
+	cursor: pointer;
+	display: inline-block;
 }
 
 .lightText {

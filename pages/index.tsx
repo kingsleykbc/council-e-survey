@@ -1,4 +1,4 @@
-import Home from '../Components/Home';
+import Home from '../Components/QuestionsList';
 import Section from '../Components/UIComponents/Section';
 
 /**

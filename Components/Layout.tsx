@@ -6,6 +6,7 @@ import Loader from './UIComponents/Loader';
 import Router from 'next/router';
 import { db, auth } from '../firebase/clientApp';
 import { doc, getDoc } from 'firebase/firestore';
+import Footer from './SharedComponents/Footer';
 
 const Layout = ({ children, setTheme, theme, route }) => {
 	const [user, loading, error] = useAuthState(auth);
@@ -27,12 +28,12 @@ const Layout = ({ children, setTheme, theme, route }) => {
 				const idToken = await user.getIdTokenResult();
 				if (idToken.claims.isAdmin) {
 					setIsAdmin(true);
-					setUserData({ fullName: 'Admin', email: user.email });
+					setUserData({ fullName: 'Admin', email: user.email, id: user.uid });
 				} else {
 					// If not admin (user), return user data
 					const docRef = doc(db, 'users', user.uid);
 					const u = await getDoc(docRef);
-					setUserData(u.data());
+					setUserData({...u.data(), id: u.id});
 				}
 				setDataFetched(true);
 			};
@@ -47,9 +48,10 @@ const Layout = ({ children, setTheme, theme, route }) => {
 	// ===================================================================================================================
 	if (!user || !dataFetched) return <Loader height='70vh' />;
 	return (
-		<div>
+		<div className='Layout'>
 			<Header route={route} authState={authState} theme={theme} setTheme={setTheme} />
 			<main>{typeof children === 'function' ? children({ authState }) : children}</main>
+			<Footer />
 		</div>
 	);
 };

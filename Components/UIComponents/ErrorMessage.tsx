@@ -10,7 +10,7 @@ const ErrorMessage = ({ error, center = false }) => {
 			exit='initial'
 			show={error !== ''}
 		>
-			<h5 className={center ? 'aCenter' : "aLeft"}>{error}</h5>
+			<h5 className={center ? 'aCenter' : 'aLeft'}>{error}</h5>
 		</Animatable>
 	);
 };

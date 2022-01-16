@@ -7,6 +7,7 @@ import Router from 'next/router';
 import Animatable from './UIComponents/Animatable';
 import Logo from './UIComponents/Logo';
 import AdminLoginForm from './LoginComponents/AdminLoginForm';
+import Footer from './SharedComponents/Footer';
 
 interface LoginProps {
 	view?: 'login' | 'signup' | 'admin-login';
@@ -65,6 +66,7 @@ const Login: FC<LoginProps> = ({ view = 'login' }) => {
 						</Animatable>
 					</div>
 				</div>
+				<Footer />
 			</Animatable>
 
 			{/* STYLE */}
@@ -80,6 +82,7 @@ const Login: FC<LoginProps> = ({ view = 'login' }) => {
 					display: flex;
 					align-items: center;
 					justify-content: center;
+					background: var(--backgroundColor);
 				}
 				.logo {
 					text-align: center;

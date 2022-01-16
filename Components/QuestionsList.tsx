@@ -2,19 +2,24 @@ import React, { useEffect, useState } from 'react';
 import { useSearch } from '../contexts/SearchContext';
 import { getQueryConstraints } from '../firebase/clientUtils';
 import { QueryParam } from '../utils/types';
-import Loader from './UIComponents/Loader';
 import { db } from '../firebase/clientApp';
 import { collection, onSnapshot, query } from 'firebase/firestore';
 import Question from './SharedComponents/Question';
 import QuestionsSkeleton from './UIComponents/Skeletons/QuestionsSkeleton';
 import AdminCreateBanner from './HomeComponents/AdminCreateBanner';
 import HideAnsweredQuestionsBanner from './HomeComponents/HideAnsweredQuestionsBanner';
+import { AnimatePresence } from 'framer-motion';
+import Lightbox from './UIComponents/Lightbox';
+import Button from './UIComponents/Button';
 
-const Home = ({ authState: { isAdmin } }) => {
+const Home = ({ authState: { isAdmin, userData } }) => {
 	const { keyword } = useSearch();
 	const [questions, setQuestions] = useState(null);
+	const [hideAnswered, setHideAnswered] = useState(false);
 
-	// Get Questions from Firestore
+	/**
+	 * GET DATA FROM FIRESTORE
+	 */
 	useEffect(() => {
 		// Setup Query
 		const collectionRef = collection(db, 'questions');
@@ -27,15 +32,23 @@ const Home = ({ authState: { isAdmin } }) => {
 		return unsub;
 	}, [keyword]);
 
-	const questionWidgets = questions?.map((item, index) => <Question key={item.id} index={index} {...item} />);
+	// Map data to components
+	const questionWidgets = questions?.map((item, index) => {
+		const hasAnswered = userData.answeredQuestions?.includes(item.id);
+
+		// If the hideAnswered option is turned on, don't map to widget
+		if (hideAnswered && hasAnswered) return <></>;
+		return <Question isAdmin={isAdmin} hasAnswered={hasAnswered} key={item.id} index={index} {...item} />;
+	});
+
 
 	// ===================================================================================================================
 	//  UI
 	// ===================================================================================================================
 	return (
 		<div className='Home'>
-			{isAdmin ? <AdminCreateBanner /> : <HideAnsweredQuestionsBanner onToggle={(togs) => alert(togs)} />}
-			{questions ? questionWidgets : <QuestionsSkeleton />}
+			{isAdmin ? <AdminCreateBanner /> : <HideAnsweredQuestionsBanner onToggle={hide => setHideAnswered(hide)} />}
+			{questions ? <AnimatePresence>{questionWidgets}</AnimatePresence> : <QuestionsSkeleton />}
 		</div>
 	);
 };

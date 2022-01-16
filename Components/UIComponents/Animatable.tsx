@@ -15,6 +15,7 @@ const Animatable = ({
 	exitBeforeEnter = true,
 	style = {},
 	custom = null,
+	presence = true,
 	children
 }) => {
 	const comp = (
@@ -40,7 +41,7 @@ const Animatable = ({
 		</motion.div>
 	);
 
-	if (exit)
+	if (exit && presence)
 		return (
 			<AnimatePresence initial={presenceInitial} exitBeforeEnter={exitBeforeEnter}>
 				{show && comp}
