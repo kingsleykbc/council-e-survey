@@ -2,7 +2,7 @@
 
 This is a production-ready online e-survey platform, where users send anonymous responses to surveys posted by the city council. It is a react PWA built with React and Next.js and firebase.
 
-Application available at https://mnwcw2.web.app/apidocs.
+Application available at https://mnwcw2.web.app.
 
 This tools used for this application are:
 
