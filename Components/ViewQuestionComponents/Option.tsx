@@ -1,35 +1,57 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { MdOutlineCheckBoxOutlineBlank as Unchecked } from 'react-icons/md';
 import { SiCheckmarx as Checked } from 'react-icons/si';
+import { AiOutlineCloseCircle as IcClose } from 'react-icons/ai';
 import AreYouSureBox from '../UIComponents/AreYouSureBox';
+import { httpsCallable } from 'firebase/functions';
+import { funcs } from '../../firebase/clientApp';
+import SlideUp from '../UIComponents/Animated/SlideUp';
+import Animatable from '../UIComponents/Animatable';
 
 const Option = ({
-	data: { id, option, percentage = 60, respondents = [] },
+	data: { id, option, noResponses, selected },
 	questionID,
-	userVoted = true,
-	authState: {
-		isAdmin,
-		userData: { id: userID }
-	},
+	totalResponses,
+	userVoted,
+	authState: { isAdmin },
 	allowUsersViewResponses
 }) => {
+	const [statusMessage, setStatusMessage] = useState('');
+	const [isLoading, setIsLoading] = useState(false);
+	const noData = totalResponses === 0;
 	const aysRef = useRef(null);
 	const canViewResult = isAdmin || (userVoted && allowUsersViewResponses);
-	const selected = respondents.indexOf(userID) !== -1;
+	const canAnswer = !(isAdmin || userVoted);
+	const percentage = noData ? 0 : (noResponses / totalResponses) * 100;
 
 	/**
 	 * SELECT THIS OPTION
 	 */
-	const handleSelect = () => {};
+	const handleSelect = async () => {
+		setIsLoading(true);
+		setStatusMessage('Sending response...');
+		try {
+			// Add question data
+			const answerQuestion = httpsCallable(funcs, 'answerQuestion');
+			const questionData: any = await answerQuestion({ questionID, optionID: id });
+
+			// If error
+			if (!questionData.data.success) throw Error(questionData.data.message);
+
+			setStatusMessage('Response successful! Thanks');
+		} catch (e) {
+			setStatusMessage(e.message);
+		}
+	};
 
 	// ===================================================================================================================
 	//  UI
 	// ===================================================================================================================
 	return (
 		<div
-			className={`Option ${isAdmin || userVoted ? '' : 'clickable'} `}
+			className={`Option ${canAnswer && 'clickable'} `}
 			onClick={
-				isAdmin || userVoted ? () => {} : () => aysRef.current.openAreYouSureBox({ message: 'Submit this option', onYes: handleSelect })
+				canAnswer && !isLoading ? () => aysRef.current.openAreYouSureBox({ message: 'Submit this option', onYes: handleSelect }) : () => {}
 			}
 		>
 			<div className='optionContent'>
@@ -42,7 +64,7 @@ const Option = ({
 				<div className='optionText'>{option}</div>
 
 				{/* VOTES */}
-				{canViewResult && <div className='lightText'>{percentage}%</div>}
+				{canViewResult && <div className='lightText'>{percentage.toFixed(1)}%</div>}
 			</div>
 
 			{/* VOTES */}
@@ -51,6 +73,28 @@ const Option = ({
 					<div className='bar'></div>
 				</div>
 			)}
+
+			<SlideUp presence={true} show={statusMessage}>
+				<div
+					className={`statusMessage ${
+						statusMessage.toLocaleLowerCase().includes('success')
+							? 'success'
+							: statusMessage.toLocaleLowerCase().includes('sending')
+							? ''
+							: 'error'
+					}`}
+				>
+					<span>{statusMessage}</span>
+					<div className='ic'>
+						<IcClose
+							onClick={e => {
+								e.stopPropagation();
+								setStatusMessage('');
+							}}
+						/>
+					</div>
+				</div>
+			</SlideUp>
 
 			<AreYouSureBox ref={aysRef} />
 
@@ -92,6 +136,40 @@ const Option = ({
 					width: ${percentage}%;
 					background: var(--successColor);
 					transition: width 0.2s ease-out;
+				}
+				.statusMessage {
+					position: fixed;
+					background: var(--backgroundColor);
+					bottom: 30px;
+					padding: 12px 15px;
+					border-radius: 5px;
+					left: 50%;
+					display: flex;
+					align-items: center;
+					transform: translateX(-50%);
+					box-shadow: var(--boxShadow);
+					gap: 10px;
+					overflow: hidden;
+				}
+
+				.statusMessage.success,
+				.statusMessage.error {
+					color: #fff;
+				}
+
+				.statusMessage.success {
+					background: var(--successColor);
+				}
+
+				.statusMessage.error {
+					background: rgb(233, 18, 83);
+				}
+
+				.ic {
+					opacity: 0.5;
+					cursor: pointer;
+					font-size: 1.5rem;
+					flex-shrink: 0;
 				}
 			`}</style>
 		</div>

@@ -22,8 +22,8 @@ const EditQuestion = () => {
 			newData.options = await getOptions();
 			setData(newData);
 		};
-		getQuestion();
-	}, []);
+		if (query.questionID) getQuestion();
+	}, [query.questionID]);
 
 	// ===================================================================================================================
 	//  UI

@@ -30,6 +30,8 @@ const AdminLoginForm = ({ onLogin }) => {
 				onLogin();
 			} else setError('This is not an admin account');
 		} catch (e) {
+			if (e.message === 'Firebase: Error (auth/wrong-password).' || e.message === 'Firebase: Error (auth/user-not-found).')
+				e.message = 'Invalid email/password';
 			setError(e.message);
 		}
 		setLoading(false);

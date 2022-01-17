@@ -23,6 +23,10 @@ const EmptySet = ({ icon = null, children, showBorders = true, height = 'auto', 
 					margin: ${margin};
 				}
 
+				.message {
+					text-align: center;
+				}
+
 				.icon {
 					font-size: 2.5rem;
 				}

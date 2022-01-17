@@ -22,7 +22,8 @@ export const getDocuments = async (collectionName: string, queryParams: Array<Qu
 export const getDocument = async (collectionName: string, id: any) => {
 	const docRef = doc(db, collectionName, id);
 	const document = await getDoc(docRef);
-	return { id: document.id, ...document.data()};
+	if (!document.exists()) return { empty: true };
+	return { id: document.id, ...document.data() };
 };
 
 /**

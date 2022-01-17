@@ -1,10 +1,30 @@
+import React, { FC } from 'react';
 import Link from 'next/link';
-import React from 'react';
 import Option from './Option';
+import { AuthStateType, ResponseData } from '../../utils/types';
 
-const QuestionDetails = ({ authState, data: { id, question, noAnswers, options, allowUsersViewResponses } }) => {
-	const optionsWidgets = options.map((item, index) => (
-		<Option allowUsersViewResponses={allowUsersViewResponses} authState={authState} key={item.id} data={item} />
+type QuestionDetailsProps = {
+	authState: AuthStateType;
+	data: any;
+	liveData: ResponseData;
+};
+
+const QuestionDetails: FC<QuestionDetailsProps> = ({
+	authState,
+	data: { id, question, options, allowUsersViewResponses },
+	liveData: { totalResponses, options: opts, userVoted }
+}) => {
+
+	const optionsWidgets = options.map(item => (
+		<Option
+			key={item.id}
+			data={{ ...item, ...opts[item.id] }}
+			questionID={id}
+			totalResponses={totalResponses}
+			userVoted={userVoted}
+			authState={authState}
+			allowUsersViewResponses={allowUsersViewResponses}
+		/>
 	));
 	const { isAdmin } = authState;
 
@@ -16,7 +36,7 @@ const QuestionDetails = ({ authState, data: { id, question, noAnswers, options, 
 			{/* HEADING SECTION */}
 			<div className='heading'>
 				<h2 className='lightText'>#{id}</h2>
-				{noAnswers === 0 && isAdmin && (
+				{totalResponses === 0 && isAdmin && (
 					<Link href={`/edit/${id}`}>
 						<a className='button'>Edit Question</a>
 					</Link>

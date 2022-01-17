@@ -21,13 +21,9 @@ const Question = ({ isAdmin, id, question, index, datePosted, noAnswers = 0, has
 	const handleDelete = async () => {
 		setIsDeleting(true);
 		try {
-			// Add question data
+			// Delete question
 			const deleteQuestion = httpsCallable(funcs, 'deleteQuestion');
-			const deletedQuestion: any = await deleteQuestion({ questionID: id });
-
-			console.log('\n.\n.\n.\n');
-			console.log(deletedQuestion.data);
-			console.log('\n.\n.\n.');
+			await deleteQuestion({ questionID: id });
 		} catch (e) {}
 	};
 
@@ -73,7 +69,7 @@ const Question = ({ isAdmin, id, question, index, datePosted, noAnswers = 0, has
 					)}
 					<Link href={`/questions/${id}`}>
 						<a>
-							<Button>View</Button>
+							<Button>{isAdmin || hasAnswered ? 'View' : 'Answer'}</Button>
 						</a>
 					</Link>
 				</div>

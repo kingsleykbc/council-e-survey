@@ -1,12 +1,6 @@
 import React from 'react';
 import Login from '../Components/Login';
 
-const signup = () => {
-	return (
-		<div>
-			<Login view='signup' />
-		</div>
-	);
-};
+const signup = () => <Login view='signup' />;
 
 export default signup;

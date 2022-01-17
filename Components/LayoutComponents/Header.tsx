@@ -1,23 +1,47 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { auth } from '../../firebase/clientApp';
 import { signOut } from 'firebase/auth';
-import { IoMdMoon } from 'react-icons/io';
-import { RiSunFill as IconSun } from 'react-icons/ri';
 import Logo from '../UIComponents/Logo';
-import { BsPersonCircle as IconPerson } from 'react-icons/bs';
 import Animatable from '../UIComponents/Animatable';
 import { useSearch } from '../../contexts/SearchContext';
-import { FiLogOut as IcLogout } from 'react-icons/fi';
 import Button from '../UIComponents/Button';
+import Lightbox from '../UIComponents/Lightbox';
+import { IoMdMoon } from 'react-icons/io';
+import { BsPersonCircle as IconPerson } from 'react-icons/bs';
+import { RiSunFill as IconSun } from 'react-icons/ri';
+import { FiLogOut as IcLogout } from 'react-icons/fi';
+import { AiOutlineMail as IcEmail } from 'react-icons/ai';
+import { BsPerson as IcUser } from 'react-icons/bs';
+import { httpsCallable } from 'firebase/functions';
+import { funcs } from '../../firebase/clientApp';
+import AreYouSureBox from '../UIComponents/AreYouSureBox';
 
-const Header = ({ theme, route, setTheme, authState: { isAuthenticated, user, userData, loading, error } }) => {
+const Header = ({ theme, route, setTheme, authState: { isAdmin, userData } }) => {
 	const { keyword, setKeyword } = useSearch();
+	const aysRef = useRef(null);
+	const [showAccountLB, setShowAccountLB] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
+	const toggleAccountLB = () => setShowAccountLB(!showAccountLB);
+
 	/**
 	 * HANDLE LOGOUT
 	 */
 	const handleLogout = async () => {
 		try {
 			await signOut(auth);
+		} catch (e) {}
+	};
+
+	/**
+	 * DELETE ACCOUNT
+	 */
+	const handleAccountDelete = async () => {
+		setIsLoading(true);
+		try {
+			// Add question data
+			const deleteAccount = httpsCallable(funcs, 'deleteAccount');
+			await deleteAccount({});
+			handleLogout();
 		} catch (e) {}
 	};
 
@@ -47,9 +71,9 @@ const Header = ({ theme, route, setTheme, authState: { isAuthenticated, user, us
 						<li>
 							<ThemeToggleButton theme={theme} setTheme={setTheme} />
 						</li>
-						<li className='account'>
+						<li className='account' onClick={toggleAccountLB}>
 							<IconPerson />
-							<div>{userData.fullName}</div>
+							<div className='username'>{userData.fullName}</div>
 						</li>
 						<li>
 							<Button responsiveHideText icon={<IcLogout />} onClick={handleLogout} className='button'>
@@ -59,6 +83,40 @@ const Header = ({ theme, route, setTheme, authState: { isAuthenticated, user, us
 					</ul>
 				</nav>
 			</Animatable>
+
+			<Lightbox width='400px' autoHeight show={showAccountLB} toggle={toggleAccountLB}>
+				<div className='accountDetails'>
+					<div className='iconAcct'>
+						<IconPerson />
+					</div>
+
+					<ul className='dets'>
+						<li>
+							<IcUser />
+							<span>{userData.fullName}</span>
+						</li>
+						<li>
+							<IcEmail />
+							<span>{userData.email}</span>
+						</li>
+					</ul>
+
+					{!isAdmin && (
+						<Button
+							isLoading={isLoading}
+							onClick={() =>
+								aysRef.current.openAreYouSureBox({ message: 'Delete account and all your responses', onYes: handleAccountDelete })
+							}
+							className='delete'
+						>
+							Delete Account
+						</Button>
+					)}
+				</div>
+			</Lightbox>
+
+			<AreYouSureBox ref={aysRef} />
+
 			{/* STYLE */}
 			<style jsx>{`
 				h1 {
@@ -74,6 +132,9 @@ const Header = ({ theme, route, setTheme, authState: { isAuthenticated, user, us
 					position: sticky;
 					top: 0;
 					z-index: 10;
+				}
+				.username {
+					display: none;
 				}
 
 				.logo {
@@ -93,6 +154,11 @@ const Header = ({ theme, route, setTheme, authState: { isAuthenticated, user, us
 				.account {
 					display: flex;
 					align-items: center;
+					cursor: pointer;
+				}
+
+				.account:hover {
+					opacity: 0.6;
 				}
 
 				.account div {
@@ -119,8 +185,44 @@ const Header = ({ theme, route, setTheme, authState: { isAuthenticated, user, us
 					text-overflow: ellipsis;
 				}
 
+				.accountDetails {
+					text-align: center;
+				}
+
+				.iconAcct {
+					font-size: 4rem;
+					opacity: 0.5;
+				}
+
+				:global(button.delete) {
+					background: #fc145a !important;
+				}
+				.dets {
+					margin-bottom: 20px;
+					display: block;
+				}
+				.dets li {
+					width: 100%;
+					display: flex;
+					gap: 15px;
+					justify-content: center;
+					align-items: center;
+					padding: 15px 0;
+					border-bottom: var(--border);
+				}
+
+				.dets li:last-child {
+					border-bottom: none;
+				}
+
+				.dets :global(svg) {
+					opacity: 0.5;
+					font-size: 1.5rem;
+				}
+
 				@media screen and (min-width: 800px) {
-					h1 {
+					h1,
+					.username {
 						display: block;
 					}
 
@@ -134,6 +236,10 @@ const Header = ({ theme, route, setTheme, authState: { isAuthenticated, user, us
 
 					.account div {
 						max-width: 100%;
+					}
+
+					.iconAcct {
+						font-size: 4rem;
 					}
 				}
 			`}</style>

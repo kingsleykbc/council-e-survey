@@ -25,6 +25,7 @@ const Button: FC<ButtonProps> = props => {
 		responsiveHideText = false,
 		secondType
 	} = props;
+	
 	return (
 		<button onClick={onClick} className={className} disabled={isLoading}>
 			{isLoading ? (

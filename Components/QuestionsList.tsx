@@ -11,6 +11,8 @@ import HideAnsweredQuestionsBanner from './HomeComponents/HideAnsweredQuestionsB
 import { AnimatePresence } from 'framer-motion';
 import Lightbox from './UIComponents/Lightbox';
 import Button from './UIComponents/Button';
+import EmptySet from './UIComponents/EmptySet';
+import Router from 'next/router';
 
 const Home = ({ authState: { isAdmin, userData } }) => {
 	const { keyword } = useSearch();
@@ -41,14 +43,21 @@ const Home = ({ authState: { isAdmin, userData } }) => {
 		return <Question isAdmin={isAdmin} hasAnswered={hasAnswered} key={item.id} index={index} {...item} />;
 	});
 
-
 	// ===================================================================================================================
 	//  UI
 	// ===================================================================================================================
 	return (
 		<div className='Home'>
 			{isAdmin ? <AdminCreateBanner /> : <HideAnsweredQuestionsBanner onToggle={hide => setHideAnswered(hide)} />}
-			{questions ? <AnimatePresence>{questionWidgets}</AnimatePresence> : <QuestionsSkeleton />}
+			{questions?.length === 0 ? (
+				<EmptySet margin='30px auto' height='40vh'>
+					No Questions
+				</EmptySet>
+			) : questions ? (
+				<AnimatePresence>{questionWidgets}</AnimatePresence>
+			) : (
+				<QuestionsSkeleton />
+			)}
 		</div>
 	);
 };

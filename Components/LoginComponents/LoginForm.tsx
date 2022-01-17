@@ -26,6 +26,8 @@ const LoginForm = ({ onLogin }) => {
 			await signInWithEmailAndPassword(auth, email, password);
 			onLogin();
 		} catch (e) {
+			if (e.message === 'Firebase: Error (auth/wrong-password).' || e.message === 'Firebase: Error (auth/user-not-found).')
+				e.message = 'Invalid email/password';
 			setError(e.message);
 		}
 		setLoading(false);
@@ -34,10 +36,10 @@ const LoginForm = ({ onLogin }) => {
 	/**
 	 * PREFILL WITH TEST CREDENTIALS (TEST ONLY)
 	 */
-	const prefill = ({email, password}) => {
+	const prefill = ({ email, password }) => {
 		emailRef.current.value = email;
 		passwordRef.current.value = password;
-	}
+	};
 
 	// ===================================================================================================================
 	//  UI

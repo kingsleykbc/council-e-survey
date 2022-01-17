@@ -202,6 +202,7 @@ const Lightbox = props => {
 					right: 12px;
 					font-size: 1.7rem;
 					cursor: pointer;
+					z-index: 5;
 				}
 
 				.cancelButton:hover {

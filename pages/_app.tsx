@@ -4,6 +4,7 @@ import ThemeContextProvider, { ThemeContext } from '../contexts/ThemeContext';
 import SearchContextProvider from '../contexts/SearchContext';
 import Router from 'next/router';
 import NProgress from 'nprogress';
+import Head from 'next/head';
 
 /**
  * SETUP N-PROGRESS LOADER
@@ -19,6 +20,9 @@ function MyApp({ Component, pageProps, router }) {
 				<ThemeContext.Consumer>
 					{({ theme, colors, setTheme }) => (
 						<>
+							<Head>
+								<title>Council E-survey</title>
+							</Head>
 							{/* DON'T SHOW LAYOUT FOR THE AUTHENTICATION PAGES */}
 							{['/signup', '/login', '/admin-login'].includes(router.route) ? (
 								<Component route={router.route} {...pageProps} />
@@ -45,10 +49,14 @@ function MyApp({ Component, pageProps, router }) {
 									--boxShadow: 0 2px 5px ${theme === 'dark' ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.15)'};
 									--border: 1px solid ${colors.borderColor};
 								}
-								
+
 								#nprogress .bar {
 									background: var(--primaryColor) !important;
 									border-color: var(--primaryColor) !important;
+								}
+
+								#nprogress .spinner {
+									display: none;
 								}
 
 								body {

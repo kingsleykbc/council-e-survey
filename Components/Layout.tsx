@@ -5,7 +5,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import Loader from './UIComponents/Loader';
 import Router from 'next/router';
 import { db, auth } from '../firebase/clientApp';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import Footer from './SharedComponents/Footer';
 
 const Layout = ({ children, setTheme, theme, route }) => {
@@ -29,13 +29,19 @@ const Layout = ({ children, setTheme, theme, route }) => {
 				if (idToken.claims.isAdmin) {
 					setIsAdmin(true);
 					setUserData({ fullName: 'Admin', email: user.email, id: user.uid });
+					setDataFetched(true);
 				} else {
+					const unsub = onSnapshot(doc(db, 'users', user.uid), doc => {
+						setUserData({ ...doc.data(), id: user.uid });
+						setDataFetched(true);
+					});
+
+					return unsub;
 					// If not admin (user), return user data
-					const docRef = doc(db, 'users', user.uid);
-					const u = await getDoc(docRef);
-					setUserData({...u.data(), id: u.id});
+					// const docRef = doc(db, 'users', user.uid);
+					// const u = await getDoc(docRef);
+					// setUserData({ ...u.data(), id: u.id });
 				}
-				setDataFetched(true);
 			};
 			getAdmin();
 		}
